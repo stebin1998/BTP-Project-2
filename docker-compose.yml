@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: Stebinbtp405
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: steb435
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  user_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    ports:
+      - "5001:5000"
+    environment:
+      FLASK_APP: user.py
+    depends_on:
+      - db
+
+  reservation_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    ports:
+      - "5002:5000"
+    environment:
+      FLASK_APP: manage.py
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
